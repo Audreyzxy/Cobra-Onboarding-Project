@@ -1,0 +1,138 @@
+﻿
+@{
+    ViewBag.Title = "Order";
+}
+<link href="~/Scripts/aappCutomer.css" rel="stylesheet" />
+@*<link href="~/Content/theme.css" rel="stylesheet" />*@
+
+<div class="container" ng-app="cobraAppOrder">
+    <div ng-controller="orderCtrl">
+        @*ng-init="GetAllOrders()"*@
+        <hr />
+        <div class="modal fade modal-dialog" role="dialog">
+            <script type="text/ng-template" id="aeOrder.html">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-title">{{headerTitle}}</h3>
+                    </div>
+                    <div class="modal-body">
+                        <form class="form-horizontal" name="addOrderForm" role="form">
+                            <div class="form-group">
+                                <label class="control-label col-sm-2" for="txtOrderId">Order Id</label>
+                                <div class="col-sm-10">
+                                    <input ng-model="order.OrderId" class="form-control" type="text" placeholder="Order Id" title=" OrderId" /> {{ order.OrderId }}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-2" for="txtOrderDate">Order Date</label>
+                                <div class="col-sm-10">
+                                    <input type="date" ng-model="order.OrderDate" class="form-control" value="{{order.OrderDate.replace('/Date(','').replace(')/','') | date:'yyyy-MM-dd' }}"  /> 
+                                </div>@*placeholder="yyyy/MM/dd" title=" OrderDate" {{ order.OrderDate.replace('/Date(','').replace(')/','') | date:'yyyy-MM-dd' }}*@
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-2" for="txtCustName">Customer Name</label>
+                                <div class="col-sm-10">
+                                    <select ng-model="order.CustId" ng-options="c.Value as c.Text for c in custNames" class="form-control" ng-required="true">
+                                        <option value="">{{order.CustName}}</option>
+                                        @*order.CustName*@
+                                    </select>
+                                    @*<select class="form-control placeholder-color"
+                                                ng-model="order.CustId">
+                                            <option value="{{order.CustId}}" class="placeholder-color">{{order.CustName}}</option>
+                                            <option ng-repeat="c in custNames" value="{{c.Value}}" class="control-color">
+                                                {{c.Text}}
+                                            </option>
+                                        </select>
+                                        {{order.CustId}}*@
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-2" for="txtProd">Product</label>
+                                <div class="col-sm-10">
+                                    <select ng-model="order.ProdId" ng-options="p.Value as p.Text for p in prodNames" class="form-control" ng-required="true" ng-change="GetPrice(order.ProdId)">
+                                        <option value="">-----select product------</option>
+                                        <option value="{{order.ProdId}}">{{order.ProdName}}</option>
+                                    </select>
+                                    @*<select class="form-control placeholder-color"
+                                                ng-model="prodId">
+                                            <option value="{{order.ProductId}}" class="placeholder-color">{{order.ProdName}}</option>
+                                            <option ng-repeat="p in prodNames" value="{{p.Value}}" class="control-color">
+                                                {{p.Text}}
+                                            </option>
+                                        </select>
+                                        {{prodId}}*@
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-2" for="txtPrice">Product Price</label>
+                                <div class="col-sm-10">
+                                    @*<input ng-model="order.ProdPrice" class="form-control" type="text" placeholder="Product Price" title=" ProdPrice" /> {{ order.ProdPrice }}*@
+                                    <br />
+                                    <label ng-model="price" >{{price.Price}}</label>      
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-offset-2 col-sm-10">
+                                    <button class="btn btn-primary" ng-click="save()">Submit</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-warning btn-lg pull-right" ng-click="cancel()">Cancel</button>
+                    </div>
+                </div>
+            </script>
+        </div>
+
+        <div>
+            <button class="btn btn-success btn-lg pull-right" ng-click="AddOrder()">Add</button>
+        </div>
+        <h2>Orders List</h2>
+        <span class="clearfix"></span>
+        <hr />
+
+        <div>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>  Id  </th>
+                        <th>  Order Id  </th>
+                        <th>  Date  </th>
+                        <th>  Customer Name  </th>
+                        <th>  Product  </th>
+                        <th>  Price  </th>
+                        <th>  Action  </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="o in order">
+                        <td>{{o.Id}}</td>
+                        <td>{{o.OrderId}}</td>
+                        <td>{{o.OrderDate.replace('/Date(','').replace(')/','') | date:'yyyy-MM-dd'}}</td>
+                        <td>{{o.CustName}}</td>
+                        <td>{{o.ProdName}}</td>
+                        <td>{{o.ProdPrice}}</td> @*o.OrderDate.replace('/Date(','\'').replace(')/','\'')*@
+                        <td>
+                            <button class="btn btn-primary" ng-click="EditOrder(o)">Edit</button>
+                            <button class="btn btn-danger" ng-click="DeleteOrder(o)">Delete</button>
+                        </td>
+
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        @*<div>
+            <select class="form-control placeholder-color"
+                    ng-model="order.CustId">
+                <option value="{{CustId}}" class="placeholder-color">{{CustName}}</option>
+                <option ng-repeat="c in custNames" value="{{c.Value}}" class="control-color">
+                    {{c.Text}}
+                </option>
+            </select>
+            {{order.CustId}}
+        </div>*@
+    </div>
+</div>
+
+
